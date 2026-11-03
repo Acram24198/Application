@@ -41,9 +41,18 @@ jobs:
         run: |
           ./fbt fap_the_application
 
+      - name: Locate and stage compiled FAP
+        run: |
+          mkdir -p artifacts
+          find firmware/build -type f -name "*.fap" -print
+          find firmware/build -type f \
+            -name "the_application.fap" \
+            -exec cp {} artifacts/ \;
+          test -f artifacts/the_application.fap
+
       - name: Upload compiled FAP
         uses: actions/upload-artifact@v4
         with:
           name: The-Application-FAP
-          path: firmware/build/**/*.fap
+          path: artifacts/the_application.fap
           if-no-files-found: error
