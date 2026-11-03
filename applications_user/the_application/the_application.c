@@ -99,8 +99,8 @@ int32_t the_application_main(void* p) {
     Storage* storage = furi_record_open(RECORD_STORAGE);
     state->score = load_score(storage);
 
-    furi_hal_gpio_init(&gpio_ext_pa7, GpioModeInputPullUp, GpioPullUp, GpioSpeedLow);
-    furi_hal_gpio_init(&gpio_ext_pb2, GpioModeInputPullUp, GpioPullUp, GpioSpeedLow);
+    furi_hal_gpio_init(&gpio_ext_pa7, GpioModeInput, GpioPullUp, GpioSpeedLow);
+    furi_hal_gpio_init(&gpio_ext_pb2, GpioModeInput, GpioPullUp, GpioSpeedLow);
 
     ViewPort* viewport = view_port_alloc();
     view_port_draw_callback_set(viewport, draw_callback, state);
