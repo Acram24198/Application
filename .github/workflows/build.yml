@@ -1,0 +1,46 @@
+
+name: Build The Application
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'applications_user/**'
+      - '.github/workflows/build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out application
+        uses: actions/checkout@v4
+        with:
+          path: app-source
+
+      - name: Check out matching Flipper firmware
+        uses: actions/checkout@v4
+        with:
+          repository: flipperdevices/flipperzero-firmware
+          ref: 9981d9d4
+          path: firmware
+          submodules: recursive
+
+      - name: Copy application
+        run: |
+          mkdir -p firmware/applications_user/the_application
+          cp app-source/applications_user/the_application/* firmware/applications_user/the_application/
+
+      - name: Build application
+        working-directory: firmware
+        run: ./fbt fap_the_application
+
+      - name: Upload compiled FAP
+        uses: actions/upload-artifact@v4
+        with:
+          name: The-Application-FAP
+          path: firmware/build/**/*.fap
+          if-no-files-found: error
